@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.santi.apac5.dto.BibliotecaDTO;
 import com.santi.apac5.dto.SocioDTO;
 import com.santi.apac5.model.Socio;
 import com.santi.apac5.repository.SocioRepository;
@@ -53,8 +53,8 @@ public class SocioServiceImpl implements SocioService{
     }
 
     @Override
-    public List<SocioDTO> listAllSocios() {
-        List<Socio> lista = socioRepository.findAll();
+    public List<SocioDTO> listAllSocios(BibliotecaDTO bibliotecaDTO) {
+        List<Socio> lista = (List<Socio>) socioRepository.getSociosByBiblioteca(bibliotecaDTO.getNom());
         List<SocioDTO> listaResultado = new ArrayList<SocioDTO>();
         
         for (int i = 0; i < lista.size(); ++i) {

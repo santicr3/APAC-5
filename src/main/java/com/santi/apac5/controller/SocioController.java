@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -34,7 +35,7 @@ public class SocioController {
     @Autowired
     private BibliotecaService bibliotecaService;
 
-    @PutMapping("/Biblioteca/{nom}/Socio")
+    @PutMapping("/biblioteca/{nom}/socio")
     public ResponseEntity<BibliotecaDTO> addSocioToBiblioteca(
         @PathVariable String nom,
         @RequestBody SocioDTO newSocioDTO){
@@ -53,19 +54,27 @@ public class SocioController {
         }
         
     }
-
-    @GetMapping("Biblioteca/{idBiblioteca}/Socios")
-    public ResponseEntity<List<SocioDTO>> listSociosBiblioteca(@PathVariable String nom){
+        
+    @GetMapping("biblioteca/{idBiblioteca}/socios")
+    public ResponseEntity<List<SocioDTO>> listaSociosBiblioteca(@PathVariable String nom){
+        
         BibliotecaDTO bibliotecaDTO = bibliotecaService.getBibliotecaByNom(nom);
-        if (bibliotecaDTO == null) {
+        if(bibliotecaDTO == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } else {
-            List<SocioDTO> socios = socioService.listAllSocios();
-            if(socios == null || socios.isEmpty()){
+        }else{
+            List<SocioDTO> socios = socioService.listAllSocios(bibliotecaDTO);
+            if (socios == null || socios.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }else{
-                return new ResponseEntity<>(socios, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(socios,HttpStatus.OK);
             }
         }
+    }
+    
+
+    @DeleteMapping("/socios/{dni}")
+    public ResponseEntity<String> removeSocio(@PathVariable String dni){
+        socioService.deleteSocio(dni);
+        return new ResponseEntity<>("Socio eliminado", HttpStatus.OK);
     }
 }

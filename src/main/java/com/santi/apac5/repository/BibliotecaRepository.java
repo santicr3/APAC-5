@@ -1,6 +1,5 @@
 package com.santi.apac5.repository;
 
-import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
